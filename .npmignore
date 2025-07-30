@@ -1,0 +1,53 @@
+# Source files
+src/
+public/
+
+# Development files
+*.test.*
+*.stories.*
+*.spec.*
+__tests__/
+tests/
+test/
+
+# Configuration files
+vite.config.ts
+tsconfig.json
+tsconfig.app.json
+tsconfig.node.json
+tailwind.config.ts
+postcss.config.js
+eslint.config.js
+components.json
+
+# Development dependencies
+node_modules/
+.git/
+.gitignore
+.github/
+
+# Build artifacts (except dist)
+*.log
+.DS_Store
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Documentation (keep README.md)
+docs/
+*.md
+!README.md
+
+# Demo and example files
+pages/
+App.tsx
+main.tsx
+index.html 
