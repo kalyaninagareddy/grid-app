@@ -1,5 +1,5 @@
-import React from 'react';
-import { Settings, Eye, EyeOff } from 'lucide-react';
+import React, { useState } from 'react';
+import { Settings, Eye, EyeOff, GripVertical } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
@@ -10,18 +10,59 @@ interface ColumnVisibilityProps {
   columns: DataGridColumn[];
   visibleColumns: string[];
   onVisibilityChange: (columnId: string, visible: boolean) => void;
+  onColumnOrderChange?: (newOrder: string[]) => void;
+  currentColumnOrder?: string[];
 }
 
 export function ColumnVisibility({ 
   columns, 
   visibleColumns, 
-  onVisibilityChange 
+  onVisibilityChange,
+  onColumnOrderChange,
+  currentColumnOrder
 }: ColumnVisibilityProps) {
+  const [dragIndex, setDragIndex] = useState<number | null>(null);
+  const [dragOverIndex, setDragOverIndex] = useState<number | null>(null);
+
   const handleToggleAll = () => {
     const allVisible = columns.length === visibleColumns.length;
     columns.forEach(column => {
       onVisibilityChange(column.id, !allVisible);
     });
+  };
+
+  const handleDragStart = (e: React.DragEvent, index: number) => {
+    setDragIndex(index);
+    e.dataTransfer.effectAllowed = 'move';
+    e.dataTransfer.setData('text/html', index.toString());
+  };
+
+  const handleDragOver = (e: React.DragEvent, index: number) => {
+    e.preventDefault();
+    e.dataTransfer.dropEffect = 'move';
+    setDragOverIndex(index);
+  };
+
+  const handleDragLeave = () => {
+    setDragOverIndex(null);
+  };
+
+  const handleDrop = (e: React.DragEvent, dropIndex: number) => {
+    e.preventDefault();
+    if (dragIndex === null || dragIndex === dropIndex || !onColumnOrderChange || !currentColumnOrder) {
+      setDragIndex(null);
+      setDragOverIndex(null);
+      return;
+    }
+
+    const newOrder = [...currentColumnOrder];
+    const draggedItem = newOrder[dragIndex];
+    newOrder.splice(dragIndex, 1);
+    newOrder.splice(dropIndex, 0, draggedItem);
+    
+    onColumnOrderChange(newOrder);
+    setDragIndex(null);
+    setDragOverIndex(null);
   };
 
   const allVisible = columns.length === visibleColumns.length;
@@ -64,10 +105,33 @@ export function ColumnVisibility({
 
           <ScrollArea className="h-64">
             <div className="space-y-2">
-              {columns.map((column) => {
+              {(currentColumnOrder || columns.map(col => col.id)).map((columnId, index) => {
+                const column = columns.find(col => col.id === columnId);
+                if (!column) return null;
+                
                 const isVisible = visibleColumns.includes(column.id);
+                const isDragging = dragIndex === index;
+                const isDragOver = dragOverIndex === index;
+                
                 return (
-                  <div key={column.id} className="flex items-center space-x-2">
+                  <div
+                    key={column.id}
+                    className={`column-visibility-item flex items-center space-x-2 p-2 rounded-md ${
+                      isDragging ? 'dragging' : ''
+                    } ${
+                      isDragOver ? 'drag-over' : ''
+                    }`}
+                    draggable={!!onColumnOrderChange}
+                    onDragStart={(e) => handleDragStart(e, index)}
+                    onDragOver={(e) => handleDragOver(e, index)}
+                    onDragLeave={handleDragLeave}
+                    onDrop={(e) => handleDrop(e, index)}
+                  >
+                    {onColumnOrderChange && (
+                      <div className="column-visibility-drag-handle flex-shrink-0">
+                        <GripVertical className="w-4 h-4 text-muted-foreground" />
+                      </div>
+                    )}
                     <Checkbox
                       id={column.id}
                       checked={isVisible}

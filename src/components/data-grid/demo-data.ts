@@ -14,6 +14,7 @@ export interface SampleUser {
   performance: number;
   location: string;
   manager: string;
+  description: string;
 }
 
 // Sample data
@@ -30,7 +31,8 @@ export const sampleUsers: SampleUser[] = [
     avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=50&h=50&fit=crop&crop=face',
     performance: 85,
     location: 'New York',
-    manager: 'Sarah Wilson'
+    manager: 'Sarah Wilson',
+    description: 'John is a highly skilled software engineer with expertise in React, TypeScript, and Node.js. He has been instrumental in developing our flagship product and mentoring junior developers. His strong problem-solving abilities and attention to detail make him an invaluable team member. John consistently delivers high-quality code and is always willing to help others improve their skills.'
   },
   {
     id: '2',
@@ -44,7 +46,8 @@ export const sampleUsers: SampleUser[] = [
     avatar: 'https://images.unsplash.com/photo-1494790108755-2616b4e7bf8a?w=50&h=50&fit=crop&crop=face',
     performance: 92,
     location: 'San Francisco',
-    manager: 'Mike Johnson'
+    manager: 'Mike Johnson',
+    description: 'Jane is a creative marketing specialist with over 8 years of experience in digital marketing and brand strategy. She has successfully launched multiple campaigns that increased brand awareness by 40% and drove significant revenue growth. Her expertise includes social media marketing, content creation, and data-driven campaign optimization. Jane is known for her innovative approach and ability to connect with target audiences effectively.'
   },
   {
     id: '3',
@@ -58,7 +61,8 @@ export const sampleUsers: SampleUser[] = [
     avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=50&h=50&fit=crop&crop=face',
     performance: 78,
     location: 'Chicago',
-    manager: 'Lisa Davis'
+    manager: 'Lisa Davis',
+    description: 'Bob is a seasoned sales professional with extensive experience in B2B sales and account management. He has consistently exceeded sales targets and built strong relationships with key clients. His strategic approach to sales and deep understanding of customer needs has resulted in numerous successful deals. Bob is currently on leave but has left a strong foundation for the sales team to build upon.'
   },
   {
     id: '4',
@@ -72,7 +76,8 @@ export const sampleUsers: SampleUser[] = [
     avatar: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=50&h=50&fit=crop&crop=face',
     performance: 88,
     location: 'Austin',
-    manager: 'Tom Anderson'
+    manager: 'Tom Anderson',
+    description: 'Alice is a talented UI/UX designer with a passion for creating intuitive and beautiful user experiences. She specializes in user research, wireframing, and prototyping, and has contributed to several successful product redesigns. Her attention to detail and user-centered design approach has significantly improved user satisfaction scores. Alice is currently awaiting final approval for her role.'
   },
   {
     id: '5',
@@ -86,7 +91,8 @@ export const sampleUsers: SampleUser[] = [
     avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=50&h=50&fit=crop&crop=face',
     performance: 94,
     location: 'Seattle',
-    manager: 'Sarah Wilson'
+    manager: 'Sarah Wilson',
+    description: 'Alice is a talented UI/UX designer with a passion for creating intuitive and beautiful user experiences. She specializes in user research, wireframing, and prototyping, and has contributed to several successful product redesigns. Her attention to detail and user-centered design approach has significantly improved user satisfaction scores. Alice is currently awaiting final approval for her role.'
   },
   {
     id: '6',
@@ -100,7 +106,8 @@ export const sampleUsers: SampleUser[] = [
     avatar: 'https://images.unsplash.com/photo-1544725176-7c40e5a71c5e?w=50&h=50&fit=crop&crop=face',
     performance: 76,
     location: 'Denver',
-    manager: 'Rachel Green'
+    manager: 'Rachel Green',
+    description: 'Eva is a dedicated HR professional with over 10 years of experience in employee relations, talent acquisition, and organizational development. She has successfully implemented several HR initiatives that improved employee engagement and retention. Eva is known for her strong communication skills and ability to build positive relationships across all levels of the organization. She is currently leading the company\'s diversity and inclusion efforts.'
   },
   {
     id: '7',
@@ -114,7 +121,8 @@ export const sampleUsers: SampleUser[] = [
     avatar: 'https://images.unsplash.com/photo-1560250097-0b93528c311a?w=50&h=50&fit=crop&crop=face',
     performance: 82,
     location: 'Boston',
-    manager: 'Kevin Brown'
+    manager: 'Kevin Brown',
+    description: 'David is a seasoned finance professional with extensive experience in financial analysis, budgeting, and strategic planning. He has successfully managed multiple financial projects that resulted in significant cost savings and improved financial performance. David is known for his analytical approach and ability to provide valuable insights to senior leadership. He is currently leading the company\'s financial planning and analysis efforts.'
   },
   {
     id: '8',
@@ -128,7 +136,8 @@ export const sampleUsers: SampleUser[] = [
     avatar: 'https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?w=50&h=50&fit=crop&crop=face',
     performance: 89,
     location: 'Miami',
-    manager: 'Mike Johnson'
+    manager: 'Mike Johnson',
+    description: 'Grace is a creative marketing specialist with over 8 years of experience in digital marketing and brand strategy. She has successfully launched multiple campaigns that increased brand awareness by 40% and drove significant revenue growth. Her expertise includes social media marketing, content creation, and data-driven campaign optimization. Grace is known for her innovative approach and ability to connect with target audiences effectively.'
   },
   {
     id: '9',
@@ -142,7 +151,8 @@ export const sampleUsers: SampleUser[] = [
     avatar: 'https://images.unsplash.com/photo-1519244703995-f4e0f30006d5?w=50&h=50&fit=crop&crop=face',
     performance: 91,
     location: 'Phoenix',
-    manager: 'Lisa Davis'
+    manager: 'Lisa Davis',
+    description: 'Henry is a seasoned sales professional with extensive experience in B2B sales and account management. He has consistently exceeded sales targets and built strong relationships with key clients. His strategic approach to sales and deep understanding of customer needs has resulted in numerous successful deals. Henry is currently on leave but has left a strong foundation for the sales team to build upon.'
   },
   {
     id: '10',
@@ -156,7 +166,8 @@ export const sampleUsers: SampleUser[] = [
     avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=50&h=50&fit=crop&crop=face',
     performance: 95,
     location: 'Portland',
-    manager: 'Sarah Wilson'
+    manager: 'Sarah Wilson',
+    description: 'Ivy is a highly skilled software engineer with expertise in React, TypeScript, and Node.js. He has been instrumental in developing our flagship product and mentoring junior developers. His strong problem-solving abilities and attention to detail make him an invaluable team member. John consistently delivers high-quality code and is always willing to help others improve their skills.'
   },
   {
     id: '11',
@@ -170,7 +181,8 @@ export const sampleUsers: SampleUser[] = [
     avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=50&h=50&fit=crop&crop=face',
     performance: 85,
     location: 'New York',
-    manager: 'Sarah Wilson'
+    manager: 'Sarah Wilson',
+    description: 'John is a highly skilled software engineer with expertise in React, TypeScript, and Node.js. He has been instrumental in developing our flagship product and mentoring junior developers. His strong problem-solving abilities and attention to detail make him an invaluable team member. John consistently delivers high-quality code and is always willing to help others improve their skills.'
   },
   {
     id: '12',
@@ -184,7 +196,8 @@ export const sampleUsers: SampleUser[] = [
     avatar: 'https://images.unsplash.com/photo-1494790108755-2616b4e7bf8a?w=50&h=50&fit=crop&crop=face',
     performance: 92,
     location: 'San Francisco',
-    manager: 'Mike Johnson'
+    manager: 'Mike Johnson',
+    description: 'Jane is a creative marketing specialist with over 8 years of experience in digital marketing and brand strategy. She has successfully launched multiple campaigns that increased brand awareness by 40% and drove significant revenue growth. Her expertise includes social media marketing, content creation, and data-driven campaign optimization. Jane is known for her innovative approach and ability to connect with target audiences effectively.'
   },
   {
     id: '13',
@@ -198,7 +211,8 @@ export const sampleUsers: SampleUser[] = [
     avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=50&h=50&fit=crop&crop=face',
     performance: 78,
     location: 'Chicago',
-    manager: 'Lisa Davis'
+    manager: 'Lisa Davis',
+    description: 'Bob is a seasoned sales professional with extensive experience in B2B sales and account management. He has consistently exceeded sales targets and built strong relationships with key clients. His strategic approach to sales and deep understanding of customer needs has resulted in numerous successful deals. Bob is currently on leave but has left a strong foundation for the sales team to build upon.'
   },
   {
     id: '14',
@@ -212,7 +226,8 @@ export const sampleUsers: SampleUser[] = [
     avatar: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=50&h=50&fit=crop&crop=face',
     performance: 88,
     location: 'Austin',
-    manager: 'Tom Anderson'
+    manager: 'Tom Anderson',
+    description: 'Alice is a talented UI/UX designer with a passion for creating intuitive and beautiful user experiences. She specializes in user research, wireframing, and prototyping, and has contributed to several successful product redesigns. Her attention to detail and user-centered design approach has significantly improved user satisfaction scores. Alice is currently awaiting final approval for her role.'
   },
   {
     id: '15',
@@ -226,7 +241,8 @@ export const sampleUsers: SampleUser[] = [
     avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=50&h=50&fit=crop&crop=face',
     performance: 94,
     location: 'Seattle',
-    manager: 'Sarah Wilson'
+    manager: 'Sarah Wilson',
+    description: 'Charlie is a highly skilled software engineer with expertise in React, TypeScript, and Node.js. He has been instrumental in developing our flagship product and mentoring junior developers. His strong problem-solving abilities and attention to detail make him an invaluable team member. Charlie consistently delivers high-quality code and is always willing to help others improve his skills.'
   },
   {
     id: '16',
@@ -240,7 +256,8 @@ export const sampleUsers: SampleUser[] = [
     avatar: 'https://images.unsplash.com/photo-1544725176-7c40e5a71c5e?w=50&h=50&fit=crop&crop=face',
     performance: 76,
     location: 'Denver',
-    manager: 'Rachel Green'
+    manager: 'Rachel Green',
+    description: 'Eva is a dedicated HR professional with over 10 years of experience in employee relations, talent acquisition, and organizational development. She has successfully implemented several HR initiatives that improved employee engagement and retention. Eva is known for her strong communication skills and ability to build positive relationships across all levels of the organization. She is currently leading the company\'s diversity and inclusion efforts.'
   },
   {
     id: '17',
@@ -254,7 +271,8 @@ export const sampleUsers: SampleUser[] = [
     avatar: 'https://images.unsplash.com/photo-1560250097-0b93528c311a?w=50&h=50&fit=crop&crop=face',
     performance: 82,
     location: 'Boston',
-    manager: 'Kevin Brown'
+    manager: 'Kevin Brown',
+    description: 'David is a seasoned finance professional with extensive experience in financial analysis, budgeting, and strategic planning. He has successfully managed multiple financial projects that resulted in significant cost savings and improved financial performance. David is known for his analytical approach and ability to provide valuable insights to senior leadership. He is currently leading the company\'s financial planning and analysis efforts.'
   },
   {
     id: '18',
@@ -268,7 +286,8 @@ export const sampleUsers: SampleUser[] = [
     avatar: 'https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?w=50&h=50&fit=crop&crop=face',
     performance: 89,
     location: 'Miami',
-    manager: 'Mike Johnson'
+    manager: 'Mike Johnson',
+    description: 'Grace is a creative marketing specialist with over 8 years of experience in digital marketing and brand strategy. She has successfully launched multiple campaigns that increased brand awareness by 40% and drove significant revenue growth. Her expertise includes social media marketing, content creation, and data-driven campaign optimization. Grace is known for her innovative approach and ability to connect with target audiences effectively.'
   },
   {
     id: '19',
@@ -282,7 +301,8 @@ export const sampleUsers: SampleUser[] = [
     avatar: 'https://images.unsplash.com/photo-1519244703995-f4e0f30006d5?w=50&h=50&fit=crop&crop=face',
     performance: 91,
     location: 'Phoenix',
-    manager: 'Lisa Davis'
+    manager: 'Lisa Davis',
+    description: 'Henry is a seasoned sales professional with extensive experience in B2B sales and account management. He has consistently exceeded sales targets and built strong relationships with key clients. His strategic approach to sales and deep understanding of customer needs has resulted in numerous successful deals. Henry is currently on leave but has left a strong foundation for the sales team to build upon.'
   },
   {
     id: '20',
@@ -296,7 +316,8 @@ export const sampleUsers: SampleUser[] = [
     avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=50&h=50&fit=crop&crop=face',
     performance: 95,
     location: 'Portland',
-    manager: 'Sarah Wilson'
+    manager: 'Sarah Wilson',
+    description: 'Ivy is a highly skilled software engineer with expertise in React, TypeScript, and Node.js. He has been instrumental in developing our flagship product and mentoring junior developers. His strong problem-solving abilities and attention to detail make him an invaluable team member. John consistently delivers high-quality code and is always willing to help others improve their skills.'
   },
 ];
 
@@ -426,5 +447,15 @@ export const userColumns: DataGridColumn<SampleUser>[] = [
     filterable: true,
     sortable: true,
     width: 150,
+  },
+  {
+    id: 'description',
+    accessorKey: 'description',
+    header: 'Description',
+    type: 'largeText',
+    editable: true,
+    filterable: true,
+    sortable: true,
+    width: 200,
   },
 ];

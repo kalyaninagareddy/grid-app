@@ -14,7 +14,7 @@ import {
   ColumnOrderState,
   ColumnSizingState,
 } from '@tanstack/react-table';
-import { ArrowUpDown, ArrowUp, ArrowDown, Pin, PinOff, MoreVerticalIcon, Text, Hash, List, Calendar, BadgeCheck, Image as ImageIcon, BarChart2, Clock, ArrowLeft, ArrowRight, Filter, EyeOff, Minus, GripVertical, MoveLeft, MoveRight, ChevronsLeft, ChevronsRight } from 'lucide-react';
+import { ArrowUpDown, ArrowUp, ArrowDown, Pin, PinOff, MoreVerticalIcon, Text, Hash, List, Calendar, BadgeCheck, Image as ImageIcon, BarChart2, Clock, ArrowLeft, ArrowRight, Filter, EyeOff, Minus, GripVertical, MoveLeft, MoveRight, ChevronsLeft, ChevronsRight, FileText } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
@@ -26,7 +26,9 @@ import { FileUpload } from './FileUpload';
 import { GlobalSearch } from './GlobalSearch';
 import { ThemeAwareSearch } from './ThemeAwareSearch';
 import { ColumnVisibility } from './ColumnVisibility';
-import { ColumnFilters } from './ColumnFilters';
+import { ColumnFilter } from './ColumnFilter';
+import { AppliedFilters } from './AppliedFilters';
+
 import { BulkActions } from './BulkActions';
 import { TablePagination } from './TablePagination';
 import { CellRenderer } from './CellRenderers';
@@ -60,6 +62,7 @@ const typeIcons: Record<string, JSX.Element> = {
   badge: <BadgeCheck className="w-4 h-4 text-pink-500" />,
   image: <ImageIcon className="w-4 h-4 text-orange-500" />,
   chart: <BarChart2 className="w-4 h-4 text-cyan-500" />,
+  largeText: <FileText className="w-4 h-4 text-indigo-500" />,
   timestamp: <Clock className="w-4 h-4 text-gray-500" />,
 };
 
@@ -91,8 +94,7 @@ export function DataGrid<T extends Record<string, any>>({
   const [globalFilter, setGlobalFilter] = useState('');
   const [editingCell, setEditingCell] = useState<{ rowId: string; columnId: string } | null>(null);
   const [pinnedColumns, setPinnedColumns] = useState<{ left: string[]; right: string[] }>({ left: [], right: [] });
-  const [customFilters, setCustomFilters] = useState<FilterValue[]>([]);
-  const [theme, setTheme] = useState<GridTheme>({ mode: theming.defaultTheme || 'light' });
+  const [theme, setTheme] = useState<GridTheme | any>({ mode: theming.defaultTheme || 'light' });
   // const [columnOrder, setColumnOrder] = useState<ColumnOrderState>(columns.map(col => col.id));
   const [columnOrder, setColumnOrder] = useState<ColumnOrderState>(() => {
     const dataColumnIds = columns.map(col => col.id);
@@ -254,6 +256,27 @@ export function DataGrid<T extends Record<string, any>>({
                 </div>
               )}
               
+              {column.filterable !== false && (
+                <ColumnFilter
+                  column={column}
+                  value={columnFilters.find(f => f.id === column.id)?.value}
+                  data={data}
+                  onFilterChange={(filterValue) => {
+                    const existingIndex = columnFilters.findIndex(f => f.id === column.id);
+                    if (existingIndex >= 0) {
+                      const newFilters = [...columnFilters];
+                      newFilters[existingIndex] = { id: column.id, value: filterValue };
+                      setColumnFilters(newFilters);
+                    } else {
+                      setColumnFilters(prev => [...prev, { id: column.id, value: filterValue }]);
+                    }
+                  }}
+                  onClear={() => {
+                    setColumnFilters(prev => prev.filter(f => f.id !== column.id));
+                  }}
+                />
+              )}
+              
               {column.pinnable !== false && (
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
@@ -265,10 +288,6 @@ export function DataGrid<T extends Record<string, any>>({
                     <DropdownMenuItem onClick={() => setColumnVisibility(prev => ({ ...prev, [column.id]: false }))}>
                       <EyeOff className="mr-2 h-4 w-4" />
                       Hide Column
-                    </DropdownMenuItem>
-                    <DropdownMenuItem onClick={() => setColumnFilters(prev => [...prev, { id: column.id, value: '' }])}>
-                      <Filter className="mr-2 h-4 w-4" />
-                      Filter
                     </DropdownMenuItem>
                     <DropdownMenuItem onClick={() => setSorting([{ id: column.id, desc: false }])}>
                       <ArrowUp className="mr-2 h-4 w-4" />
@@ -408,30 +427,112 @@ export function DataGrid<T extends Record<string, any>>({
   const filteredData = useMemo(() => {
     let filtered = data;
 
-    // Apply custom filters first
-    if (customFilters.length > 0) {
+    // Apply column filters
+    if (columnFilters.length > 0) {
       filtered = filtered.filter(row => {
-        return customFilters.every(filter => {
+        return columnFilters.every(filter => {
           const column = columns.find(col => col.id === filter.id);
-          if (!column) return true;
+          if (!column || !filter.value) return true;
           
           const value = row[column.accessorKey as keyof T];
-          if (!value) return false;
 
-          switch (filter.type) {
-            case 'text':
-              return value.toString().toLowerCase().includes(filter.value.toLowerCase());
-            case 'select':
-              return value.toString() === filter.value.toString();
-            case 'date':
-              return value.toString().includes(filter.value);
+          const filterValue = filter.value as any;
+          const { operator, value: filterVal, secondValue } = filterValue || {};
+
+          // Handle null/undefined values properly
+          if (value === null || value === undefined) return false;
+          
+          // For empty string values, only allow them if the filter is specifically looking for empty strings
+          if (value === '' && filterVal !== '') return false;
+
+          switch (column.type) {
             case 'number': {
               const numValue = Number(value);
-              const filterNum = Number(filter.value);
-              return !isNaN(numValue) && !isNaN(filterNum) && numValue === filterNum;
+              const numFilter = Number(filterVal);
+              const numSecond = secondValue ? Number(secondValue) : null;
+              
+              if (isNaN(numValue) || isNaN(numFilter)) return false;
+              
+              switch (operator) {
+                case 'eq': return numValue === numFilter;
+                case 'ne': return numValue !== numFilter;
+                case 'gt': return numValue > numFilter;
+                case 'gte': return numValue >= numFilter;
+                case 'lt': return numValue < numFilter;
+                case 'lte': return numValue <= numFilter;
+                case 'between': 
+                  return numSecond !== null && numValue >= Math.min(numFilter, numSecond) && numValue <= Math.max(numFilter, numSecond);
+                default: return true;
+              }
             }
-            default:
-              return value.toString().toLowerCase().includes(filter.value.toLowerCase());
+            
+            case 'date': {
+              const dateValue = new Date(value);
+              const dateFilter = new Date(filterVal);
+              const dateSecond = secondValue ? new Date(secondValue) : null;
+              
+              if (isNaN(dateValue.getTime()) || isNaN(dateFilter.getTime())) return false;
+              
+              switch (operator) {
+                case 'eq': return dateValue.toDateString() === dateFilter.toDateString();
+                case 'ne': return dateValue.toDateString() !== dateFilter.toDateString();
+                case 'gt': return dateValue > dateFilter;
+                case 'gte': return dateValue >= dateFilter;
+                case 'lt': return dateValue < dateFilter;
+                case 'lte': return dateValue <= dateFilter;
+                case 'between': 
+                  return dateSecond && dateValue.getTime() >= Math.min(dateFilter.getTime(), dateSecond.getTime()) && dateValue.getTime() <= Math.max(dateFilter.getTime(), dateSecond.getTime());
+                default: return true;
+              }
+            }
+            
+            case 'select':
+            case 'badge': {
+              const strValue = value.toString();
+              const strFilter = filterVal.toString();
+              
+              switch (operator) {
+                case 'eq': return strValue === strFilter;
+                case 'ne': return strValue !== strFilter;
+                case 'in': return Array.isArray(filterVal) && filterVal.includes(strValue);
+                case 'not_in': return Array.isArray(filterVal) && !filterVal.includes(strValue);
+                default: return true;
+              }
+            }
+            
+            case 'text': {
+              const strValue = value.toString();
+              
+              switch (operator) {
+                case 'in': return Array.isArray(filterVal) && filterVal.includes(strValue);
+                case 'not_in': return Array.isArray(filterVal) && !filterVal.includes(strValue);
+                default: return true;
+              }
+            }
+            
+            case 'largeText': {
+              const strValue = value.toString().toLowerCase();
+              const strFilter = filterVal.toString().toLowerCase();
+              
+              switch (operator) {
+                case 'contains': return strValue.includes(strFilter);
+                default: return true;
+              }
+            }
+            
+            default: // other types
+              const strValue = value.toString().toLowerCase();
+              const strFilter = filterVal.toString().toLowerCase();
+              
+              switch (operator) {
+                case 'contains': return strValue.includes(strFilter);
+                case 'not_contains': return !strValue.includes(strFilter);
+                case 'starts_with': return strValue.startsWith(strFilter);
+                case 'ends_with': return strValue.endsWith(strFilter);
+                case 'eq': return strValue === strFilter;
+                case 'ne': return strValue !== strFilter;
+                default: return true;
+              }
           }
         });
       });
@@ -448,37 +549,35 @@ export function DataGrid<T extends Record<string, any>>({
     }
 
     return filtered;
-  }, [data, globalFilter, selectedGlobalSearchColumns, columns, customFilters]);
+  }, [data, globalFilter, selectedGlobalSearchColumns, columns, columnFilters]);
 
   const table = useReactTable({
     data: filteredData,
     columns: tableColumns,
     state: {
       sorting,
-      columnFilters,
       columnVisibility,
       rowSelection,
       globalFilter,
       pagination: paginationState,
       columnOrder,
-      columnSizing, // <-- add this
+      columnSizing,
     },
     enableRowSelection: selection.enabled,
     onSortingChange: setSorting,
-    onColumnFiltersChange: setColumnFilters,
     onColumnVisibilityChange: setColumnVisibility,
     onRowSelectionChange: setRowSelection,
     onGlobalFilterChange: setGlobalFilter,
     onPaginationChange: setPaginationState,
     onColumnOrderChange: setColumnOrder,
-    onColumnSizingChange: setColumnSizing, // <-- add this
+    onColumnSizingChange: setColumnSizing,
     getCoreRowModel: getCoreRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
     getSortedRowModel: getSortedRowModel(),
     manualPagination: false,
-    enableColumnResizing: true, // <-- enable resizing
-    columnResizeMode: 'onChange', // or 'onEnd' for resize mode
+    enableColumnResizing: true,
+    columnResizeMode: 'onChange',
   });
 
   // Handlers
@@ -656,6 +755,13 @@ export function DataGrid<T extends Record<string, any>>({
             onVisibilityChange={(columnId, visible) => 
               setColumnVisibility(prev => ({ ...prev, [columnId]: visible }))
             }
+            onColumnOrderChange={(newOrder) => {
+              // Ensure selection column stays first if enabled
+              const dataColumns = newOrder.filter(id => id !== 'select');
+              const finalOrder = selection.enabled ? ['select', ...dataColumns] : dataColumns;
+              setColumnOrder(finalOrder);
+            }}
+            currentColumnOrder={columnOrder.filter(id => id !== 'select')}
           />
           
           {theming.enabled && (
@@ -678,11 +784,16 @@ export function DataGrid<T extends Record<string, any>>({
         onUnpinColumn={handleUnpinColumn}
       />
 
-      {/* Filters */}
-      <ColumnFilters
+      {/* Applied Filters */}
+      <AppliedFilters
+        filters={columnFilters}
         columns={columns}
-        filters={customFilters}
-        onFiltersChange={setCustomFilters}
+        onClearFilter={(columnId) => {
+          setColumnFilters(prev => prev.filter(f => f.id !== columnId));
+        }}
+        onClearAll={() => {
+          setColumnFilters([]);
+        }}
       />
 
       {/* Table */}

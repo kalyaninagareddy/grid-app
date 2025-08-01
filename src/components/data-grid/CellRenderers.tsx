@@ -1,10 +1,12 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Button } from '@/components/ui/button';
-import { Check, X, Edit } from 'lucide-react';
+import { Check, X, Edit, FileText, Eye } from 'lucide-react';
 import { CellRendererProps } from './types';
+import { LargeTextEditor } from './LargeTextEditor';
+import { ResizablePopup } from './ResizablePopup';
 
 // Text Cell Renderer
 export function TextCell({ value, row, column, isEditing, onSave, onCancel }: CellRendererProps) {
@@ -245,6 +247,106 @@ export function ChartCell({ value, row, column }: CellRendererProps) {
   );
 }
 
+// Large Text Cell Renderer
+export function LargeTextCell({ value, row, column, isEditing, onSave, onCancel }: CellRendererProps) {
+  const [showEditor, setShowEditor] = useState(false);
+  const [showPopup, setShowPopup] = useState(false);
+  const cellRef = useRef<HTMLDivElement>(null);
+
+  const handleEdit = () => {
+    if (column.editable) {
+      setShowEditor(true);
+    }
+  };
+
+  const handleSave = (newValue: string) => {
+    onSave?.(newValue);
+    setShowEditor(false);
+  };
+
+  const handleCancel = () => {
+    setShowEditor(false);
+    onCancel?.();
+  };
+
+  const handleCellDoubleClick = () => {
+    if (column.editable) {
+      handleEdit();
+    }
+  };
+
+
+
+  const handlePopupClose = () => {
+    setShowPopup(false);
+  };
+
+  // Show editor in popup
+  if (showEditor) {
+    return (
+      <LargeTextEditor
+        value={value || ''}
+        onSave={handleSave}
+        onCancel={handleCancel}
+        maxLength={500}
+        rows={15}
+        cols={80}
+      />
+    );
+  }
+
+  // Display text based on column width
+  const displayText = value || '';
+  const isLongText = displayText.length > 50;
+  const truncatedText = isLongText ? displayText.substring(0, 50) + '...' : displayText;
+
+  return (
+    <>
+      <div 
+        ref={cellRef}
+        className="flex items-center justify-between group large-text-cell cursor-pointer"
+        onDoubleClick={handleCellDoubleClick}
+      >
+        <div className="flex items-center flex-1 min-w-0">
+          <span className="text-sm truncate">
+            {truncatedText}
+          </span>
+        </div>
+        <div className="flex items-center gap-1">
+          {isLongText && (
+            <Button
+              variant="ghost"
+              size="sm"
+              className="h-5 w-5 p-0 opacity-0 group-hover:opacity-100 transition-opacity"
+              onClick={(e) => {
+                e.stopPropagation();
+                setShowPopup(true);
+              }}
+              title="View full description"
+            >
+              <Eye className="w-3 h-3" />
+            </Button>
+          )}
+          {column.editable && (
+            <Edit className="w-2.5 h-2.5 opacity-0 group-hover:opacity-60 cursor-pointer text-muted-foreground hover:text-foreground transition-all" />
+          )}
+        </div>
+      </div>
+
+      {/* Content Popup */}
+      {showPopup && (
+        <ResizablePopup
+          content={displayText}
+          onClose={handlePopupClose}
+          onSave={handleSave}
+          anchorElement={cellRef.current}
+          isEditable={column.editable}
+        />
+      )}
+    </>
+  );
+}
+
 // Main Cell Renderer Factory
 export function CellRenderer(props: CellRendererProps) {
   const { column } = props;
@@ -260,6 +362,8 @@ export function CellRenderer(props: CellRendererProps) {
       return <ImageCell {...props} />;
     case 'chart':
       return <ChartCell {...props} />;
+    case 'largeText':
+      return <LargeTextCell {...props} />;
     case 'text':
     default:
       return <TextCell {...props} />;

@@ -484,4 +484,105 @@ All colors MUST be HSL.
       line-height: 1.5rem;
     }
   }
+
+  /* Column visibility drag and drop */
+  .column-visibility-item {
+    transition: all 0.2s ease;
+  }
+
+  .column-visibility-item:hover {
+    background-color: hsl(var(--accent) / 0.1);
+  }
+
+  .column-visibility-item.dragging {
+    opacity: 0.5;
+    transform: rotate(2deg);
+  }
+
+  .column-visibility-item.drag-over {
+    background-color: hsl(var(--accent) / 0.3);
+    border-left: 2px solid hsl(var(--primary));
+  }
+
+  .column-visibility-drag-handle {
+    cursor: grab;
+    transition: color 0.2s ease;
+  }
+
+  .column-visibility-drag-handle:active {
+    cursor: grabbing;
+  }
+
+  .column-visibility-drag-handle:hover {
+    color: hsl(var(--foreground));
+  }
+
+  /* Large text editor styling */
+  .large-text-editor-dialog {
+    backdrop-filter: blur(4px);
+  }
+
+  .large-text-editor-textarea {
+    font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+    line-height: 1.5;
+    tab-size: 2;
+  }
+
+  .large-text-editor-textarea:focus {
+    outline: none;
+    border-color: hsl(var(--primary));
+    box-shadow: 0 0 0 2px hsl(var(--primary) / 0.2);
+  }
+
+  /* Large text cell styling */
+  .large-text-cell {
+    overflow: hidden;
+  }
+
+  .large-text-cell:hover {
+    background-color: hsl(var(--accent) / 0.1);
+  }
+
+  .large-text-cell .truncate {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  /* Large text popup styling */
+  .large-text-popup {
+    backdrop-filter: blur(4px);
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  }
+
+  /* Resize handles styling */
+  .resize-handle-n,
+  .resize-handle-s,
+  .resize-handle-e,
+  .resize-handle-w {
+    background: transparent;
+    transition: background-color 0.2s ease;
+  }
+
+  .resize-handle-n:hover,
+  .resize-handle-s:hover,
+  .resize-handle-e:hover,
+  .resize-handle-w:hover {
+    background-color: hsl(var(--primary) / 0.1);
+  }
+
+  .resize-handle-ne,
+  .resize-handle-nw,
+  .resize-handle-se,
+  .resize-handle-sw {
+    background: linear-gradient(135deg, transparent 50%, hsl(var(--muted-foreground) / 0.3) 50%);
+    transition: background-color 0.2s ease;
+  }
+
+  .resize-handle-ne:hover,
+  .resize-handle-nw:hover,
+  .resize-handle-se:hover,
+  .resize-handle-sw:hover {
+    background: linear-gradient(135deg, transparent 50%, hsl(var(--primary) / 0.5) 50%);
+  }
 }

@@ -4,7 +4,7 @@ export type DataGridColumn<T = any> = ColumnDef<T> & {
   id: string;
   accessorKey?: keyof T;
   header: string;
-  type?: 'text' | 'number' | 'select' | 'date' | 'badge' | 'image' | 'chart';
+  type?: 'text' | 'number' | 'select' | 'date' | 'badge' | 'image' | 'chart' | 'largeText';
   editable?: boolean;
   filterable?: boolean;
   sortable?: boolean;
